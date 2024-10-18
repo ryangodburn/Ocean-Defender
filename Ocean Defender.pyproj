@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>21470e1e-a097-48a4-aac2-3cb445b886fb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Ocean_Defender.py</StartupFile>
+    <StartupFile>OceanDefender.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Ocean_Defender.py" />
+    <Compile Include="attack.py" />
+    <Compile Include="elements.py" />
+    <Compile Include="enemy.py" />
+    <Compile Include="OceanDefender.py" />
+    <Compile Include="player.py" />
+    <Compile Include="structure.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
