@@ -43,3 +43,4 @@ class bonusEnemy(pygame.sprite.Sprite):
             self.kill()  # Remove the bonus enemy from all groups and free memory
         elif self.rect.left < self.screenOffset / 2:
             self.kill()  # Remove if it moves past the left side of the screen
+            
