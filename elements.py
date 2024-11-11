@@ -133,6 +133,7 @@ class Elements:
                 if pygame.sprite.spritecollide(attackSprite, self.playerGroup, False):
                     attackSprite.kill()  # Remove enemy attack on hit
                     self.lives -= 1  # Decrease player lives
+                    self.destroySound.play()
                     if self.lives == 0:
                         self.endGame()  # End game if no lives left
 
@@ -163,7 +164,7 @@ class Elements:
         self.enemyAttackGroup.empty()  # Clear enemy attacks
         self.createEnemies()  # Create new enemies
         self.bonusEnemyGroup.empty()  # Clear bonus enemies
-        self.createBarriers()  # Create new barriers
+        self.barriers = self.createBarriers()
         self.points = 0  # Reset points
 
     def checkHighScore(self):
