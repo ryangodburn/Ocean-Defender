@@ -5,7 +5,7 @@ class Structure(pygame.sprite.Sprite):
         super().__init__()  # Initialize the parent class
         # Create a small surface for the structure
         self.image = pygame.Surface((3, 3))  # Width: 3 pixels, Height: 3 pixels
-        self.image.fill((243, 216, 63))  # Fill the surface with a yellow color
+        self.image.fill((255, 0, 0))  # Fill the surface with a yellow color
         self.rect = self.image.get_rect()  # Get the rectangle that defines the structure's position
         self.rect.topleft = (x, y)  # Set the structure's position
 

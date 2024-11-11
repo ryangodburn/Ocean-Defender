@@ -10,7 +10,7 @@ displayHeight = 700
 displayOffset = 50
 
 # Define colors using RGB tuples
-colorYellow = (243, 216, 63)
+colorYellow = (255, 0, 0)
 
 # Load fonts and create text surfaces for UI elements
 font = pygame.font.Font("Font/monogram.ttf", 40)
@@ -19,9 +19,13 @@ gameOverSurface = font.render("GAME OVER", False, colorYellow)
 pointsSurface = font.render("SCORE", False, colorYellow)
 highscoreSurface = font.render("HIGH SCORE", False, colorYellow)
 
+# Load background image
+background = pygame.image.load("Graphics/background.jpg")
+background = pygame.transform.scale(background, (displayWidth + displayOffset, displayHeight + 2 * displayOffset))
+
 # Set up the display window
 screen = pygame.display.set_mode((displayWidth + displayOffset, displayHeight + 2 * displayOffset))
-pygame.display.set_caption("Space Invaders")  # Set the window title
+pygame.display.set_caption("Ocean Defender")  # Set the window title
 
 # Create a clock object to manage frame rate
 clock = pygame.time.Clock()
@@ -66,8 +70,8 @@ while True:
         elements.bonusEnemyGroup.update()  # Update bonus enemies
         elements.collisionsCheck()  # Check for collisions
 
-    # Clear the screen with a dark background
-    screen.fill((29, 29, 27))
+    # Draw Background
+    screen.blit(background, (0, 0))
 
     # UI Drawing
     pygame.draw.rect(screen, colorYellow, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)  # Draw border

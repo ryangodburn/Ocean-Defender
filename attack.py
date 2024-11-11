@@ -5,7 +5,7 @@ class Attack(pygame.sprite.Sprite):
         super().__init__()  # Initialize the parent class
         # Create a rectangular surface for the attack
         self.image = pygame.Surface((4, 15))  # Width: 4 pixels, Height: 15 pixels
-        self.image.fill((243, 216, 63))  # Fill the surface with a yellow color
+        self.image.fill((255, 0, 0))  # Fill the surface with a yellow color
         self.rect = self.image.get_rect()  # Get the rectangle that defines the surface's position
         self.rect.center = position  # Set the center of the attack to the specified position
         self.speed = speed  # Set the speed of the attack
