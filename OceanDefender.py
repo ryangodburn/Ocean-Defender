@@ -69,7 +69,7 @@ while True:
         elements.enemyAttackGroup.update()  # Update enemy attack group
         elements.bonusEnemyGroup.update()  # Update bonus enemies
         elements.collisionsCheck()  # Check for collisions
-
+ 
     # Draw Background
     screen.blit(background, (0, 0))
 
@@ -82,6 +82,10 @@ while True:
         screen.blit(levelSurface, (570, 740, 50, 50))
     else:
         screen.blit(gameOverSurface, (570, 740, 50, 50))
+
+    # Dynamically update and display the level text
+    levelText = f"LEVEL {str(elements.level).zfill(2)}"
+    levelSurface = font.render(levelText, False, colorYellow)
 
     # Display player lives
     positionX = 50

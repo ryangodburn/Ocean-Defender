@@ -32,6 +32,8 @@ class Elements:
         self.endNotReached = True
         self.points = 0
         self.highScore = 0
+        self.level = 1
+        self.enemySpeed = 1.0
         
         # Load high score and sounds
         self.loadHighScore()
@@ -85,6 +87,15 @@ class Elements:
             elif enemy.rect.left <= self.screenOffset / 2:
                 self.enemyDirection = 1
                 self.moveEnemiesDown(2)  # Move enemies down
+       
+        # Check if all non-bonus enemies are defated to trigger level up
+        if len(self.enemyGroup) == 0: 
+            self.levelup()
+
+    def levelup(self):
+        self.level += 1
+        self.enemySpeed *= 1.25 # Increase enemy speed by 15%
+        self.createEnemies() # Recreate enemies for new level
 
     def moveEnemiesDown(self, distance):
         # Move all enemies down by a specified distance
@@ -166,6 +177,8 @@ class Elements:
         self.bonusEnemyGroup.empty()  # Clear bonus enemies
         self.barriers = self.createBarriers()
         self.points = 0  # Reset points
+        self.level = 1 # Reset level
+        self.enemySpeed = 1.0 # reset enemy speed
 
     def checkHighScore(self):
         # Check and update high score
