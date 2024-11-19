@@ -10,7 +10,7 @@ displayHeight = 700
 displayOffset = 50
 
 # Define colors using RGB tuples
-colorYellow = (255, 0, 0)
+colorYellow = (255, 255, 255)
 
 # Load fonts and create text surfaces for UI elements
 font = pygame.font.Font("Font/monogram.ttf", 40)

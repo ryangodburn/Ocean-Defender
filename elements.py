@@ -96,6 +96,8 @@ class Elements:
         self.level += 1
         self.enemySpeed *= 1.25 # Increase enemy speed by 15%
         self.createEnemies() # Recreate enemies for new level
+        self.lives = 3 # Resets lives back to 3 each level
+        self.barriers = self.createBarriers() # Recreats the barriers for new level 
 
     def moveEnemiesDown(self, distance):
         # Move all enemies down by a specified distance
