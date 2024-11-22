@@ -5,6 +5,7 @@ from structure import grid
 from enemy import Enemy  
 from attack import Attack  
 from enemy import bonusEnemy  
+from bubble import BubbleEffect
 
 class Elements:
     def __init__(self, screenWidth, screenHeight, screenOffset):
@@ -27,6 +28,10 @@ class Elements:
         self.enemyAttackGroup = pygame.sprite.Group()
         self.bonusEnemyGroup = pygame.sprite.GroupSingle()
         
+        # Create bubble group
+        self.bubbleGroup = pygame.sprite.GroupSingle()
+        self.createBubble ()
+
         # Set initial game state variables
         self.lives = 3
         self.endNotReached = True
@@ -53,6 +58,10 @@ class Elements:
             barrier = Barriers(offsetX, self.screenHeight - 100)  # Position barriers at the bottom
             barriers.append(barrier)
         return barriers
+
+    def createBubble(self):
+        bubble = BubbleEffect(self.screenWidth, self.screenHeight)
+        self.bubbleGroup.add(bubble)
 
     def createEnemies(self):
         # Create enemies in a grid formation
@@ -172,6 +181,7 @@ class Elements:
         # Reset game state for a new game
         self.endNotReached = True
         self.lives = 3
+        self.bubbleGroup.empty() # Clear all bubbles
         self.playerGroup.sprite.restart()  # Reset player
         self.enemyGroup.empty()  # Clear enemies
         self.enemyAttackGroup.empty()  # Clear enemy attacks

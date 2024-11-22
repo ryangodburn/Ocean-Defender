@@ -1,7 +1,6 @@
 import pygame, sys, random
 from attack import Attack  # Import Attack class for handling player attacks
 from elements import Elements  # Import Elements class for game elements
-from enum import Enum
 
 pygame.init()  # Initialize all imported Pygame modules
 
@@ -55,6 +54,9 @@ pygame.time.set_timer(attackEvent, 300)  # Trigger attack events every 300 milli
 bonusEvent = pygame.USEREVENT + 1
 pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))  # Random interval for bonus creation
 
+bubbleEvent = pygame.USEREVENT + 2
+pygame.time.set_timer(bubbleEvent,1000)
+
 def draw_start_screen():
     screen.blit(background, (0, 0))
     pygame.draw.rect(screen, colorMain, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)
@@ -88,6 +90,11 @@ while True:
             elements.createBonus()  # Call method to create bonus enemy
             # Reset bonus event timer with a new random interval
             pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))
+        
+        if event.type == bubbleEvent and elements.endNotReached:
+            elements.createBubble() # call method to create a bubble
+            # Set a delay before the next bubble spawns
+            pygame.time.set_timer(bubbleEvent, random.randint(6000, 10000))
 
         # Check for player inputs
         inputs = pygame.key.get_pressed()
@@ -107,12 +114,16 @@ while True:
         elements.enemyAttackGroup.update()  # Update enemy attack group
         elements.bonusEnemyGroup.update()  # Update bonus enemies
         elements.collisionsCheck()  # Check for collisions
- 
-    # Draw Background
+    
+    # Draw Background and update bubbles
     screen.blit(background, (0, 0))
+    if elements.endNotReached:
+        elements.bubbleGroup.update()
+    
 
     if current_game_state == GAME_STATE_START:
         draw_start_screen()
+        elements.bubbleGroup.draw(screen) #draw bubbles
     
     if current_game_state == GAME_STATE_PLAYING:
         # UI Drawing
@@ -155,6 +166,7 @@ while True:
         elements.enemyGroup.draw(screen)  # Draw enemies
         elements.enemyAttackGroup.draw(screen)  # Draw enemy attacks
         elements.bonusEnemyGroup.draw(screen)  # Draw bonus enemies
+        elements.bubbleGroup.draw(screen) #draw bubbles
 
     # Update the display
     pygame.display.update()
