@@ -1,173 +1,177 @@
+# Imports
 import pygame, sys, random
-from attack import Attack  # Import Attack class for handling player attacks
-from elements import Elements  # Import Elements class for game elements
+from textwrap import wrap
+from attack import Attack
+from elements import Elements
 
-pygame.init()  # Initialize all imported Pygame modules
-
-# Set display dimensions and offset
+# Start Pygame
+pygame.init()
+# Display settings
 displayWidth = 750
 displayHeight = 700
 displayOffset = 50
-
-# Define colors using RGB tuples
 colorMain = (255, 255, 255)
-
-# Define game states
+# Game states
 GAME_STATE_START = 'start'
 GAME_STATE_PLAYING = 'playing'
 GAME_STATE_GAME_OVER = 'game_over'
 current_game_state = GAME_STATE_START
-
-# Load fonts and create text surfaces for UI elements
+# Load fonts
 font = pygame.font.Font("Font/monogram.ttf", 40)
 title_font = pygame.font.Font("Font/monogram.ttf", 80)
-
+game_over_font = pygame.font.Font("Font/monogram.ttf", 100)
+# UI text surfaces
 titleSurface = title_font.render("OCEAN DEFENDER", False, colorMain)
 startInstructionSurface = font.render("Press SPACE to Start", False, colorMain)
 controlsLeftSurface = font.render("LEFT ARROW - Move Left", False, colorMain)
 controlsRightSurface = font.render("RIGHT ARROW - Move Right", False, colorMain)
 controlsShootSurface = font.render("SPACE - Shoot", False, colorMain)
-quitSurface = font.render("ESC - Quit",False, colorMain)
-levelSurface = font.render("LEVEL 01", False, colorMain)
-gameOverSurface = font.render("GAME OVER", False, colorMain)
-pointsSurface = font.render("SCORE", False, colorMain)
-highscoreSurface = font.render("HIGH SCORE", False, colorMain)
-
-# Load background image
+quitSurface = font.render("ESC - Quit", False, colorMain)
+gameOverSurface = game_over_font.render("GAME OVER", False, colorMain)
+returnToMenuSurface = font.render("Press SPACE to return to menu", False, colorMain)
+# Load and scale background image
 background = pygame.image.load("Graphics/background.jpg")
 background = pygame.transform.scale(background, (displayWidth + displayOffset, displayHeight + 2 * displayOffset))
-
-# Set up the display window
+# Setup display window
 screen = pygame.display.set_mode((displayWidth + displayOffset, displayHeight + 2 * displayOffset))
-pygame.display.set_caption("Ocean Defender")  # Set the window title
-
-# Create a clock object to manage frame rate
+pygame.display.set_caption("Ocean Defender")
 clock = pygame.time.Clock()
-
-# Initialize the game elements
+# Initialize game elements
 elements = Elements(displayWidth, displayHeight, displayOffset)
-
-# Set up custom events for attack and bonus creation
+# Setup custom events for attacks, bonuses, and bubbles
 attackEvent = pygame.USEREVENT
-pygame.time.set_timer(attackEvent, 300)  # Trigger attack events every 300 milliseconds
-
+pygame.time.set_timer(attackEvent, 300)
 bonusEvent = pygame.USEREVENT + 1
-pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))  # Random interval for bonus creation
-
+pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))
 bubbleEvent = pygame.USEREVENT + 2
-pygame.time.set_timer(bubbleEvent,1000)
+pygame.time.set_timer(bubbleEvent, 1000)
 
 def draw_start_screen():
+    # Draw the start screen with game title and control instructions.
+    screen.blit(background, (0, 0)) # Draw the background image at the top-left corner of the screen
+    pygame.draw.rect(screen, colorMain, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60) # Draw a rounded rectangle as a border around the game area
+    screen.blit(titleSurface, (displayWidth//2 - titleSurface.get_width()//2 + displayOffset//2, 200)) # Draw the game title at the top center
+    screen.blit(startInstructionSurface, (displayWidth//2 - startInstructionSurface.get_width()//2 + displayOffset//2, 400)) # Draw the start instruction text below the title
+    screen.blit(controlsLeftSurface, (displayWidth//2 - controlsLeftSurface.get_width()//2 + displayOffset//2, 500)) # Draw the "move left" control instruction
+    screen.blit(controlsRightSurface, (displayWidth//2 - controlsRightSurface.get_width()//2 + displayOffset//2, 550)) # Draw the "move right" control instruction
+    screen.blit(controlsShootSurface, (displayWidth//2 - controlsShootSurface.get_width()//2 + displayOffset//2, 600)) # Draw the "shoot" control instruction
+    screen.blit(quitSurface, (displayWidth//2 - quitSurface.get_width()//2 + displayOffset//2, 700)) # Draw the "quit" instruction at the bottom center
+
+def draw_game_over_screen():
+    # Draw the game over screen with final score, high score, and ocean facts.
     screen.blit(background, (0, 0))
     pygame.draw.rect(screen, colorMain, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)
-
-    # Draw title and instructions
-    screen.blit(titleSurface, (displayWidth//2 - titleSurface.get_width()//2, 200))
-    screen.blit(startInstructionSurface, (displayWidth//2 - startInstructionSurface.get_width()//2, 400))
-
-    # Draw controls
-    screen.blit(controlsLeftSurface, (displayWidth//2 - controlsLeftSurface.get_width()//2, 500))
-    screen.blit(controlsRightSurface, (displayWidth//2 - controlsRightSurface.get_width()//2, 550))
-    screen.blit(controlsShootSurface, (displayWidth//2 - controlsShootSurface.get_width()//2, 600))
-    screen.blit(quitSurface,(displayWidth//2 - quitSurface.get_width()//2, 700))
+    # Display GAME OVER text
+    screen.blit(gameOverSurface, (displayWidth//2 - gameOverSurface.get_width()//2, 200))
+    # Display final score
+    scoreSurface = font.render(f"SCORE: {str(elements.points).zfill(5)}", False, colorMain)
+    screen.blit(scoreSurface, (displayWidth//2 - scoreSurface.get_width()//2, 350))    
+    # Display high score
+    highscoreSurface = font.render(f"HIGH SCORE: {str(elements.highScore).zfill(5)}", False, colorMain)
+    screen.blit(highscoreSurface, (displayWidth//2 - highscoreSurface.get_width()//2, 400))    
+    # Display "Did you know..." text and ocean fact
+    didYouKnowSurface = font.render("Did you know...", False, colorMain)
+    screen.blit(didYouKnowSurface, (displayWidth//2 - didYouKnowSurface.get_width()//2 + displayOffset//2, 500))
+    # Display ocean fact
+    wrapped_lines = wrap(fact, width=50)  # Wrap text to fit screen
+    y_position = 550
+    for line in wrapped_lines:
+        fact_surface = font.render(line, False, colorMain)
+        screen.blit(fact_surface, (displayWidth//2 - fact_surface.get_width()//2 + displayOffset//2, y_position))
+        y_position += 35    
+    # Display return to menu instruction
+    screen.blit(returnToMenuSurface, (displayWidth//2 - returnToMenuSurface.get_width()//2, y_position + 35))
+    # Keep bubbles
+    elements.bubbleGroup.update()
 
 def Quit():
-    pygame.quit()  # Uninitialize all Pygame modules
-    sys.exit()  # Exit the program
-
+    # Quit the game and close the window.
+    pygame.quit()
+    sys.exit()
+    
 while True:
-    # Event checking loop
+    # Game Loop
+
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:  # Handle window close event
+        # Event Controller
+        # Quit if quit event
+        if event.type == pygame.QUIT:
             Quit()
-
-        # Handle attack event if game is ongoing
+        # Handle attack event
         if event.type == attackEvent and current_game_state == GAME_STATE_PLAYING and elements.endNotReached:
-            elements.enemyAttack()  # Call method to handle enemy attacks
-
-        # Handle bonus event if game is ongoing
+            elements.enemyAttack()
+        # Handle bonus event
         if event.type == bonusEvent and current_game_state == GAME_STATE_PLAYING and elements.endNotReached:
-            elements.createBonus()  # Call method to create bonus enemy
-            # Reset bonus event timer with a new random interval
-            pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))
-        
+            elements.createBonus()
+            pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))        
+        # Handle bubble event
         if event.type == bubbleEvent and elements.endNotReached:
-            elements.createBubble() # call method to create a bubble
-            # Set a delay before the next bubble spawns
+            elements.createBubble()
             pygame.time.set_timer(bubbleEvent, random.randint(6000, 10000))
-
-        # Check for player inputs
+        # Take Inputs
         inputs = pygame.key.get_pressed()
-        if inputs[pygame.K_SPACE] and current_game_state == GAME_STATE_START:  # Start game if space is pressed
-            current_game_state = GAME_STATE_PLAYING
-            elements.restart()
-        if inputs[pygame.K_SPACE] and current_game_state == GAME_STATE_GAME_OVER:
-            current_game_state = GAME_STATE_START
-
-        if inputs[pygame.K_ESCAPE] and current_game_state == GAME_STATE_START: # Quits game is ESC is pressed on start menu
+        # Handle space key press for starting or resetting game
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if current_game_state == GAME_STATE_START:
+                current_game_state = GAME_STATE_PLAYING
+                elements.restart()
+            elif current_game_state == GAME_STATE_GAME_OVER:
+                current_game_state = GAME_STATE_START
+                elements.bubbleGroup.empty()
+        # Handle escape key press for quitting the game from start state
+        if inputs[pygame.K_ESCAPE] and current_game_state == GAME_STATE_START:
             Quit()
+    
+    if current_game_state == GAME_STATE_PLAYING: # Check if the game is in the playing state
+        if elements.endNotReached: # Check if the game hasn't ended
+            elements.playerGroup.update() # Update player's position and state
+            elements.moveEnemies() # Move enemy characters
+            elements.enemyAttackGroup.update() # Update enemy attack status
+            elements.bonusEnemyGroup.update() # Update bonus enemy status
+            elements.collisionsCheck() # Check for collisions between player, enemies, and attacks
+            elements.bubbleGroup.update() # Update bubbles
+        else:
+            fact = elements.get_next_fact() # Get the next fact to display
+            current_game_state = GAME_STATE_GAME_OVER # Change the game state to game over
 
-    # Game logic updates if game is ongoing
-    if elements.endNotReached and current_game_state == GAME_STATE_PLAYING:
-        elements.playerGroup.update()  # Update player state
-        elements.moveEnemies()  # Move enemies
-        elements.enemyAttackGroup.update()  # Update enemy attack group
-        elements.bonusEnemyGroup.update()  # Update bonus enemies
-        elements.collisionsCheck()  # Check for collisions
-    
-    # Draw Background and update bubbles
-    screen.blit(background, (0, 0))
-    if elements.endNotReached:
-        elements.bubbleGroup.update()
-    
+    screen.blit(background, (0, 0)) # Draw the background image on the screen
 
     if current_game_state == GAME_STATE_START:
+        # State Controller
+        # Display start screen
         draw_start_screen()
-        elements.bubbleGroup.draw(screen) #draw bubbles
-    
-    if current_game_state == GAME_STATE_PLAYING:
-        # UI Drawing
-        pygame.draw.rect(screen, colorMain, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)  # Draw border
-        pygame.draw.line(screen, colorMain, (25, 730), (775, 730), 3)  # Draw score line
-
-        # Display level or game over text based on game state
-        if elements.endNotReached:
-            screen.blit(levelSurface, (570, 740, 50, 50))
-        else:
-            screen.blit(gameOverSurface, (570, 740, 50, 50))
-
-        # Dynamically update and display the level text
+        elements.bubbleGroup.draw(screen)
+    elif current_game_state == GAME_STATE_PLAYING:
+        # Draw game UI and elements
+        pygame.draw.rect(screen, colorMain, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)
+        pygame.draw.line(screen, colorMain, (25, 730), (775, 730), 3)
+        # Display level
         levelText = f"LEVEL {str(elements.level).zfill(2)}"
         levelSurface = font.render(levelText, False, colorMain)
-
-        # Display player lives
+        screen.blit(levelSurface, (570, 740))
+        # Display lives
         positionX = 50
         for live in range(elements.lives):
-            screen.blit(elements.playerGroup.sprite.image, (positionX, 745))  # Draw each life
+            screen.blit(elements.playerGroup.sprite.image, (positionX, 745))
             positionX += 50
-
-        # Display score
-        screen.blit(pointsSurface, (50, 15, 50, 50))
-        formattedPoints = str(elements.points).zfill(5)  # Format points to 5 digits
-        pointsValueSurface = font.render(formattedPoints, False, colorMain)  # Render score text
-        screen.blit(pointsValueSurface, (50, 40, 50, 50))
-
-        # Display high score
-        screen.blit(highscoreSurface, (550, 15, 50, 50))
-        formattedHighscore = str(elements.highScore).zfill(5)  # Format high score to 5 digits
-        highscoreValueSurface = font.render(formattedHighscore, False, colorMain)  # Render high score text
-        screen.blit(highscoreValueSurface, (625, 40, 50, 50))
-
-        # Draw game elements on the screen
-        elements.playerGroup.draw(screen)  # Draw player
-        elements.playerGroup.sprite.attackGroup.draw(screen)  # Draw player attacks
+        # Display scores
+        screen.blit(font.render("SCORE", False, colorMain), (50, 15))
+        screen.blit(font.render(str(elements.points).zfill(5), False, colorMain), (50, 40))
+        screen.blit(font.render("HIGH SCORE", False, colorMain), (550, 15))
+        screen.blit(font.render(str(elements.highScore).zfill(5), False, colorMain), (625, 40))
+        # Draw game elements
+        elements.playerGroup.draw(screen)
+        elements.playerGroup.sprite.attackGroup.draw(screen)
         for barrier in elements.barriers:
-            barrier.structureGroup.draw(screen)  # Draw barriers
-        elements.enemyGroup.draw(screen)  # Draw enemies
-        elements.enemyAttackGroup.draw(screen)  # Draw enemy attacks
-        elements.bonusEnemyGroup.draw(screen)  # Draw bonus enemies
-        elements.bubbleGroup.draw(screen) #draw bubbles
-
-    # Update the display
+            barrier.structureGroup.draw(screen)
+        elements.enemyGroup.draw(screen)
+        elements.enemyAttackGroup.draw(screen)
+        elements.bonusEnemyGroup.draw(screen)
+        elements.bubbleGroup.draw(screen)
+    elif current_game_state == GAME_STATE_GAME_OVER:
+        # Display game over screen
+        draw_game_over_screen()
+    
+    # Update game
     pygame.display.update()
-    clock.tick(60)  # Cap the frame rate at 60 FPS
+    clock.tick(60)

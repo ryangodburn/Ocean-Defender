@@ -1,3 +1,4 @@
+# Imports
 import pygame
 
 class Structure(pygame.sprite.Sprite):

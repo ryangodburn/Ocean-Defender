@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="attack.py" />
+    <Compile Include="bubble.py" />
     <Compile Include="elements.py" />
     <Compile Include="enemy.py" />
     <Compile Include="OceanDefender.py" />

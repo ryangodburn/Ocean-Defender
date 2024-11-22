@@ -1,3 +1,4 @@
+# Imports
 import pygame, random
 
 class BubbleEffect(pygame.sprite.Sprite):
