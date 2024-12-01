@@ -81,8 +81,6 @@ def draw_game_over_screen():
         y_position += 35    
     # Display return to menu instruction
     screen.blit(returnToMenuSurface, (displayWidth//2 - returnToMenuSurface.get_width()//2, y_position + 35))
-    # Keep bubbles
-    elements.bubbleGroup.update()
 
 def Quit():
     # Quit the game and close the window.
@@ -105,7 +103,7 @@ while True:
             elements.createBonus()
             pygame.time.set_timer(bonusEvent, random.randint(4000, 8000))        
         # Handle bubble event
-        if event.type == bubbleEvent and elements.endNotReached:
+        if event.type == bubbleEvent:
             elements.createBubble()
             pygame.time.set_timer(bubbleEvent, random.randint(6000, 10000))
         # Take Inputs
@@ -140,6 +138,7 @@ while True:
         # State Controller
         # Display start screen
         draw_start_screen()
+        elements.bubbleGroup.update()
         elements.bubbleGroup.draw(screen)
     elif current_game_state == GAME_STATE_PLAYING:
         # Draw game UI and elements
@@ -171,6 +170,8 @@ while True:
     elif current_game_state == GAME_STATE_GAME_OVER:
         # Display game over screen
         draw_game_over_screen()
+        elements.bubbleGroup.update()
+        elements.bubbleGroup.draw(screen)
     
     # Update game
     pygame.display.update()
