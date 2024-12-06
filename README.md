@@ -1,4 +1,4 @@
-Download a video demonstration of Ocean-Defender [HERE](https://github.com/ryangodburn/Ocean-Defender/blob/main/Demo.mp4).
+[Watch a video demo!](https://youtu.be/zZ4RctHJpsk)
 
 Learn more about ocean pollution [HERE](https://www.sas.org.uk/plastic-pollution/plastic-pollution-facts-figures/).
 
